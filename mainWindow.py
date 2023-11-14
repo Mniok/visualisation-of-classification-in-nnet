@@ -26,6 +26,7 @@ rootWindow.config(menu=menu)
 
 # left column (classes container)
 leftColumn = createLeftColumn(rootWindow)
+leftColumn.pack(side=tk.LEFT, anchor=tk.W, fill=tk.Y, expand=True)
 
 # right column temp
 #ttk.Label(rootWindow, text='right column temp').grid(column=1, row=0)
