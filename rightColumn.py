@@ -30,22 +30,30 @@ def createPlot(container):
     canvas.get_tk_widget().pack()
 
     def callbackOnCanvasClick(event):
-        print("clicked at", event.xdata, event.ydata)
+        if event.xdata is None or event.ydata is None: return
+        #print("clicked at", event.xdata, event.ydata)
         dataToAppend = pd.DataFrame([[event.xdata, event.ydata, 1]], columns=['x', 'y', 'class'])
         nonlocal chosenDataset
         chosenDataset = pd.concat([chosenDataset, dataToAppend], ignore_index=True)
-        print(chosenDataset)
+        #print(chosenDataset)
         nonlocal plot1
-        print(plot1, type(plot1))
-        plot1.clear()
-        plot1.scatter(
-            x = chosenDataset['x'].values.tolist(),
-            y = chosenDataset['y'].values.tolist(),
-            c = chosenDataset['class'].values.tolist())
+        #print(plot1, type(plot1))
+        #plot1.clear()
+        #plot1.scatter(
+            #x = chosenDataset['x'].values.tolist(),
+            #y = chosenDataset['y'].values.tolist(),
+            #c = chosenDataset['class'].values.tolist())
         #points1, points2 = plot1.plot(x, y)
         #print('points:', points1, points2)
-        #nonlocal scatter
+        nonlocal scatter
+        scatter.set(
+            offsets=chosenDataset[['x', 'y']].values.tolist(),
+            array=chosenDataset['class'].values.tolist())
         #print(scatter)
+        #print(scatter.get_array())
+        #print(scatter.get_gid())
+        #print(scatter.get_offsets())
+        #print(scatter.get_facecolors())
         plot1.redraw_in_frame()
         nonlocal canvas
         canvas.draw()
