@@ -21,13 +21,35 @@ def createPlot(container):
     print(chosenDataset['y'].values.tolist())
     print(chosenDataset['class'].values.tolist())
     #! temp for dataset
-    plot1.scatter(
+    scatter = plot1.scatter(
         x = chosenDataset['x'].values.tolist(),
         y = chosenDataset['y'].values.tolist(),
         c = chosenDataset['class'].values.tolist())
-    canvas = FigureCanvasTkAgg(fig, master=container)   
+    canvas = FigureCanvasTkAgg(fig, master=container)
     canvas.draw()
     canvas.get_tk_widget().pack()
+
+    def callbackOnCanvasClick(event):
+        print("clicked at", event.xdata, event.ydata)
+        dataToAppend = pd.DataFrame([[event.xdata, event.ydata, 1]], columns=['x', 'y', 'class'])
+        nonlocal chosenDataset
+        chosenDataset = pd.concat([chosenDataset, dataToAppend], ignore_index=True)
+        print(chosenDataset)
+        nonlocal plot1
+        print(plot1, type(plot1))
+        plot1.clear()
+        plot1.scatter(
+            x = chosenDataset['x'].values.tolist(),
+            y = chosenDataset['y'].values.tolist(),
+            c = chosenDataset['class'].values.tolist())
+        #points1, points2 = plot1.plot(x, y)
+        #print('points:', points1, points2)
+        #nonlocal scatter
+        #print(scatter)
+        plot1.redraw_in_frame()
+        nonlocal canvas
+        canvas.draw()
+    canvas.mpl_connect('button_press_event', callbackOnCanvasClick)
     return canvas
     
 
