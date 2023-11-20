@@ -73,7 +73,11 @@ predPlot = predictionsDFrame.plot.scatter(x=0, y=1, c=2)
 
 #! ---
 predictionPlotWithTrueDataOnTop = predictionsDFrame.plot.scatter(x=0, y=1, c=2, cmap='Pastel1')
-predictionPlotWithTrueDataOnTop.scatter(x=chosenDataset['x'].values.tolist(), y=chosenDataset['y'].values.tolist(), c=chosenDataset['class'].values.tolist(), cmap='gist_rainbow')
+predictionPlotWithTrueDataOnTop.scatter(
+    x=chosenDataset['x'].values.tolist(),
+    y=chosenDataset['y'].values.tolist(),
+    c=chosenDataset['class'].values.tolist(),
+    cmap='gist_rainbow')
 #! ---
 
 tend = timer() #!

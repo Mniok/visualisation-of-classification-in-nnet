@@ -1,32 +1,37 @@
 import tkinter as tk
 from tkinter import ttk
+from matplotlib.figure import Figure 
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
-def createTopBar(container):
-def createBottomBar(container):
+import pandas as pd
+import matplotlib.pyplot as plt
 
-def createLeftColumn(container):
-    #columnContainer = createColumnContainer(container)
-    ### left column (classes container)
-    leftColumn = ttk.Frame(container) # ! apparrently tkintr.ttk.Frame doesn't support background colors, tkinter.Frame does
-    #leftColumn = Frame(rootWindow, bg='#EEFFEE')
-    leftColumn['borderwidth'] = 1
-    leftColumn['relief'] = 'groove'
-    leftColumn['padding'] = (8,10)
-    #leftColumn.grid(column=0, row=0, rowspan=10, sticky='NSEW') # position frame in column 0
-    #leftColumn.pack(side=tk.LEFT, anchor=tk.W, fill=tk.Y, expand=True) # moved to main window
-    #leftColumn.config(bg='#EEFFEE') # debug color
-    leftColumn.pack_propagate(0)
-    #leftColumn.config(width = 300)
-    #leftColumn['width'] = 800
-    #
-    #leftColumn.rowConfigure(1, 1)
-    label1 = tk.Label(leftColumn, text='top left', bg='#BBFFBB')
-    label1.grid(column=0, row=0, sticky=tk.NW)
-    label2 = ttk.Label(leftColumn, text='top right text')
-    label2.grid(column=1, row=0, sticky=tk.NE)
-    label3 = ttk.Label(leftColumn, text='bot left')
-    label3.grid(column=0, row=1, sticky=tk.SW)
-    label4 = ttk.Label(leftColumn, text='bot right')
-    label4.grid(column=1, row=1, sticky=tk.SE)
-    #
-    return leftColumn
+#def createTopBar(container):
+#def createBottomBar(container):
+
+def createPlot(container):
+    fig = Figure(figsize=(5, 5), dpi=100)
+    plot1 = fig.add_subplot(1, 1, 1) # 1x1 grid, place plot in index 1
+    #! temp for dataset
+    baseDir = "C:\\Users\\Stopy\\Documents\\GitHub\\visualisation-of-classification-in-nnet\\datasets\\"
+    corners80 = pd.read_csv(baseDir + "corners_80_commas.csv")
+    chosenDataset = corners80
+    print(corners80)
+    print(chosenDataset['x'].values.tolist())
+    print(chosenDataset['y'].values.tolist())
+    print(chosenDataset['class'].values.tolist())
+    #! temp for dataset
+    plot1.scatter(
+        x = chosenDataset['x'].values.tolist(),
+        y = chosenDataset['y'].values.tolist(),
+        c = chosenDataset['class'].values.tolist())
+    canvas = FigureCanvasTkAgg(fig, master=container)   
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+    return canvas
+    
+
+def createRightColumn(container):
+    rightColumn = ttk.Frame(container)
+    createPlot(rightColumn)
+    return rightColumn

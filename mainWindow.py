@@ -2,6 +2,7 @@ import tkinter as tk
 # from tkinter import *
 from tkinter import ttk
 from leftColumn import createLeftColumn
+from rightColumn import createRightColumn
 
 # create root window
 rootWindow = tk.Tk()
@@ -29,7 +30,8 @@ leftColumn = createLeftColumn(rootWindow)
 leftColumn.pack(side=tk.LEFT, anchor=tk.W, fill=tk.Y, expand=True)
 
 # right column temp
-#ttk.Label(rootWindow, text='right column temp').grid(column=1, row=0)
+rightColumn = createRightColumn(rootWindow)
+rightColumn.pack(side=tk.RIGHT, anchor=tk.E, fill=tk.Y, expand=True)
 
 # execute Tkinter
 rootWindow.mainloop()
