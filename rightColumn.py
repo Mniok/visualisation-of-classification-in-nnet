@@ -5,6 +5,8 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationTool
 
 import pandas as pd
 import matplotlib.pyplot as plt
+#import dataStore from DataStore
+from DataStore import dataStore
 
 #def createTopBar(container):
 #def createBottomBar(container):
@@ -12,27 +14,25 @@ import matplotlib.pyplot as plt
 def createPlot(container):
     fig = Figure(figsize=(5, 5), dpi=100)
     plot1 = fig.add_subplot(1, 1, 1) # 1x1 grid, place plot in index 1
-    #! temp for dataset
-    baseDir = "C:\\Users\\Stopy\\Documents\\GitHub\\visualisation-of-classification-in-nnet\\datasets\\"
-    corners80 = pd.read_csv(baseDir + "corners_80_commas.csv")
-    chosenDataset = corners80
-    #! temp for dataset
     scatter = plot1.scatter(
-        x = chosenDataset['x'].values.tolist(),
-        y = chosenDataset['y'].values.tolist(),
-        c = chosenDataset['class'].values.tolist())
+        x = dataStore.plotData['x'].values.tolist(),
+        y = dataStore.plotData['y'].values.tolist(),
+        c = dataStore.plotData['class'].values.tolist())
     canvas = FigureCanvasTkAgg(fig, master=container)
     canvas.draw()
     canvas.get_tk_widget().pack()
 
     def callbackOnCanvasClick(event):
         if event.xdata is None or event.ydata is None: return
-        dataToAppend = pd.DataFrame([[event.xdata, event.ydata, 1]], columns=['x', 'y', 'class'])
-        nonlocal chosenDataset, plot1, scatter, canvas
-        chosenDataset = pd.concat([chosenDataset, dataToAppend], ignore_index=True)
+        #dataStore.plotData.appendPlotDataPoint(event.xdata, event.ydata, 1)
+        #dataToAppend = pd.DataFrame([[event.xdata, event.ydata, 1]], columns=['x', 'y', 'class'])
+        nonlocal plot1, scatter, canvas
+        #chosenDataset = pd.concat([chosenDataset, dataToAppend], ignore_index=True)
+        dataStore.appendPlotDataPoint(event.xdata, event.ydata, 1);
+        print(dataStore.plotData);
         scatter.set(
-            offsets=chosenDataset[['x', 'y']].values.tolist(),
-            array=chosenDataset['class'].values.tolist())
+            offsets=dataStore.plotData[['x', 'y']].values.tolist(),
+            array=dataStore.plotData['class'].values.tolist())
         plot1.redraw_in_frame()
         canvas.draw()
     canvas.mpl_connect('button_press_event', callbackOnCanvasClick)
