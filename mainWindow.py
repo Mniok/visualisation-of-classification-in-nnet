@@ -5,6 +5,7 @@ from leftColumn import createLeftColumn
 from rightColumn import createRightColumn
 from fitAndPredict import fitAndPredict
 from DataStore import dataStore
+from plotComponent import plotComponent
 
 # create root window
 rootWindow = tk.Tk()
@@ -25,7 +26,7 @@ menu.add_cascade(label="Plik", menu=fileMenuCascade)
 programMenuCascade = tk.Menu(menu)
 programMenuCascade.add_command(label="Rozwiąż", command=fitAndPredict)
 programMenuCascade.add_command(label="Zamknij", command=rootWindow.destroy)
-programMenuCascade.add_command(label="Wyczyść dane", command=dataStore.clearData)
+programMenuCascade.add_command(label="Wyczyść dane", command=plotComponent.clearPlot)
 menu.add_cascade(label="Program", menu=programMenuCascade)
 
 rootWindow.config(menu=menu)

@@ -8,6 +8,8 @@ from ModelStore import modelStore
 from timeit import default_timer as timer
 
 def fitAndPredict():
+    if len(dataStore.plotData) < 1:
+        raise Exception('No data!')
     modelStore.updateModel()
     print('in fitAndPredict:', dataStore.plotData)
     coordsData = dataStore.plotData[['x', 'y']].values.tolist()
