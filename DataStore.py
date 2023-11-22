@@ -31,6 +31,10 @@ class DataStore:
         print('plot dataPoint:', 'x:', x, 'y:', y, 'class:', classValue)
         self.appendPlotData([[x, y, classValue]])
 
+    def clearData(self):
+        self.plotData = self.plotData[0:0]
+        # TODO: refresh plot
+
 
 dataStore = DataStore()
 print(dataStore)
@@ -45,5 +49,5 @@ print(dataStore.plotData)
 
 
 baseDir = "C:\\Users\\Stopy\\Documents\\GitHub\\visualisation-of-classification-in-nnet\\datasets\\"
-dataStore.plotData = pd.read_csv(baseDir + "corners_1000_commas.csv")
+dataStore.plotData = pd.read_csv(baseDir + "corners_80_commas.csv")
 print(dataStore.plotData, len(dataStore.plotData))

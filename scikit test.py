@@ -6,11 +6,13 @@ from DataStore import dataStore
 
 from timeit import default_timer as timer
 
+### file to delete
+print('!!!!!!!!!!!!!!!!! file \'scikit test.py\' shouldn\'t be used!')
 
 print('started...')
 
 t1 = timer() #!
-clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(8, 4), random_state=1, max_iter=2000)
+clf = MLPClassifier(solver='adam', alpha=1e-5, hidden_layer_sizes=(8, 4), random_state=1, max_iter=2000)
 t2 = timer() #!
 print('setup classifier time:', t2 - t1) #!
 #print(out)
