@@ -33,7 +33,19 @@ class DataStore:
 
     def clearData(self):
         self.plotData = self.plotData[0:0]
-        # TODO: refresh plot
+
+    def getXValues(self):
+        return self.plotData['x'].values.tolist()
+
+    def getYValues(self):
+        return self.plotData['y'].values.tolist()
+
+    def getClassValues(self):
+        return self.plotData['class'].values.tolist()
+
+    def getXYValues(self):
+        return self.plotData[['x', 'y']].values.tolist()
+        
 
 
 dataStore = DataStore()
