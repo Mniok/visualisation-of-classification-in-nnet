@@ -49,17 +49,3 @@ class DataStore:
 
 
 dataStore = DataStore()
-print(dataStore)
-dataStore.setPlotData(pd.DataFrame([[1,2,3]], columns=['x', 'y', 'class']))
-print(dataStore, dataStore.plotData, dataStore.classesData)
-classData = ClassData()
-print(classData)
-
-
-dataStore.plotData = pd.DataFrame([[1,2,3], [4, 5, 4]], columns=['x', 'y', 'class'])
-print(dataStore.plotData)
-
-
-baseDir = "C:\\Users\\Stopy\\Documents\\GitHub\\visualisation-of-classification-in-nnet\\datasets\\"
-dataStore.plotData = pd.read_csv(baseDir + "corners_80_commas.csv")
-print(dataStore.plotData, len(dataStore.plotData))
