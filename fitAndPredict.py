@@ -21,7 +21,7 @@ def fitAndPredict():
     predictionsDFrame = pd.DataFrame(dataForPrediction, columns=['x', 'y'])
     predictionsDFrame['predicted class'] = predictions
 
-    plot = predictionsDFrame.plot.scatter(x=0, y=1, c=2, cmap='Pastel1', marker=',') #',' - pixel
+    plot = predictionsDFrame.plot.scatter(x=0, y=1, c=2, cmap='Pastel1', marker=',', s=1) #',' - pixel, s(size)=1
     plot.scatter(
         x=dataStore.plotData['x'].values.tolist(),
         y=dataStore.plotData['y'].values.tolist(),
