@@ -2,6 +2,25 @@ import tkinter as tk
 from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+from tkinter.colorchooser import askcolor
+from tkinter import simpledialog
+
+def askComboValue(*values):
+    # https://stackoverflow.com/questions/62327504/how-to-create-a-simpledialog-like-window-with-a-combo-with-tkinter
+    top = tk.Toplevel() # use Toplevel() instead of Tk()
+    tk.Label(top, text='Select your value').pack()
+    box_value = tk.StringVar()
+    combo = ttk.Combobox(top, textvariable=box_value, values=values)
+    combo.pack()
+    combo.bind('<<ComboboxSelected>>', lambda _: top.destroy())
+    top.grab_set()
+    top.wait_window(top)  # wait for itself destroyed, so like a modal dialog
+    return box_value.get()
+
+def testCombobox():
+    result = askComboValue('o', '+', '-')
+    print(result)
+
 class ClassField:
     def __init__(self, frame, name, color, marker):
         self.frame = frame
@@ -29,15 +48,17 @@ class ClassField:
         # create context menu
         def createContextMenu():
             def setNameCallback():
-                self.name = 'abcd'
+                self.name = simpledialog.askstring(
+                    title=f'Zmień nazwę klasy \"{self.name}\"',
+                    prompt=f'Nowa nazwa klasy \"{self.name}\":')
                 self.update()
 
             def setColorCallback():
-                self.color = 'red'
+                self.color = askcolor(title=f'Zmień kolor klasy "{self.name}"')[1] # 2nd element of tuple is hex value
                 self.update()
 
             def setMarkerCallback():
-                self.marker = '+'
+                self.marker = testCombobox()
                 self.update()
 
             nonlocal self
