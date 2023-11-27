@@ -6,13 +6,39 @@ from tkinter.colorchooser import askcolor
 from tkinter import simpledialog
 
 def askComboValue(*values):
+    def drawMarker(container, marker):
+        fig = Figure(figsize=(0.2, 0.2), dpi=100)
+        axes = fig.add_subplot(1, 1, 1)  # 1x1 grid, place plot in index 1
+        figureCanvas = FigureCanvasTkAgg(fig, master=container)
+        axes.set_axis_off()
+        axes.scatter(
+            x=[0], y=[0],
+            color='black',
+            marker=marker)
+        figureCanvas.draw()
+        figureCanvas.get_tk_widget().pack(side=tk.LEFT)
+
     # https://stackoverflow.com/questions/62327504/how-to-create-a-simpledialog-like-window-with-a-combo-with-tkinter
     top = tk.Toplevel() # use Toplevel() instead of Tk()
     tk.Label(top, text='Select your value').pack()
     box_value = tk.StringVar()
-    combo = ttk.Combobox(top, textvariable=box_value, values=values)
-    combo.pack()
-    combo.bind('<<ComboboxSelected>>', lambda _: top.destroy())
+    #combo = ttk.Combobox(top, textvariable=box_value, values=values)
+    #combo.pack()
+    #combo.bind('<<ComboboxSelected>>', lambda _: top.destroy())
+    # ___
+    markers2DList = [['o', '.', ',', '+'],
+                   ['o', '.', ',', '+'],
+                   ['o', '.', ',', '+'],
+                   ['o', '+', '+', '+', 'o'],
+                   ['.', ',', '.'],
+                   ['.', '+', 'o', ',']]
+    # ___
+    for markersRow in markers2DList:
+        row = tk.Frame(top)
+        for marker in markersRow:
+            drawMarker(row, marker)
+        row.pack(side=tk.TOP, fill=tk.Y, expand=True)
+    # ___
     top.grab_set()
     top.wait_window(top)  # wait for itself destroyed, so like a modal dialog
     return box_value.get()
