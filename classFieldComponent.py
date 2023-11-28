@@ -6,6 +6,23 @@ from tkinter.colorchooser import askcolor
 from tkinter import simpledialog
 
 def askComboValue(*values):
+    top = tk.Toplevel() # use Toplevel() instead of Tk()
+    returnValue = ''
+
+    def highlightCallback(event):
+        event.canvas.figure.patch.set_facecolor('red')
+        event.canvas.draw()
+
+    def unhighlightCallback(event):
+        event.canvas.figure.patch.set_facecolor('white')
+        event.canvas.draw()
+
+    def selectMarkerCallback(marker):
+        nonlocal returnValue
+        returnValue = marker
+        top.destroy()
+
+
     def drawMarker(container, marker):
         fig = Figure(figsize=(0.2, 0.2), dpi=100)
         axes = fig.add_subplot(1, 1, 1)  # 1x1 grid, place plot in index 1
@@ -18,8 +35,12 @@ def askComboValue(*values):
         figureCanvas.draw()
         figureCanvas.get_tk_widget().pack(side=tk.LEFT)
 
-    # https://stackoverflow.com/questions/62327504/how-to-create-a-simpledialog-like-window-with-a-combo-with-tkinter
-    top = tk.Toplevel() # use Toplevel() instead of Tk()
+        # callbacks:
+        fig.canvas.mpl_connect('figure_enter_event', highlightCallback)
+        fig.canvas.mpl_connect('figure_leave_event', unhighlightCallback)
+        fig.canvas.mpl_connect('button_press_event', lambda *args: selectMarkerCallback(marker))
+
+    # from https://stackoverflow.com/questions/62327504/how-to-create-a-simpledialog-like-window-with-a-combo-with-tkinter
     tk.Label(top, text='Select your value').pack()
     box_value = tk.StringVar()
     #combo = ttk.Combobox(top, textvariable=box_value, values=values)
@@ -41,11 +62,13 @@ def askComboValue(*values):
     # ___
     top.grab_set()
     top.wait_window(top)  # wait for itself destroyed, so like a modal dialog
-    return box_value.get()
+    #return box_value.get()
+    return returnValue
 
 def testCombobox():
     result = askComboValue('o', '+', '-')
     print(result)
+    return result
 
 class ClassField:
     def __init__(self, frame, name, color, marker):
@@ -74,18 +97,24 @@ class ClassField:
         # create context menu
         def createContextMenu():
             def setNameCallback():
-                self.name = simpledialog.askstring(
+                newName = simpledialog.askstring(
                     title=f'Zmień nazwę klasy \"{self.name}\"',
                     prompt=f'Nowa nazwa klasy \"{self.name}\":')
-                self.update()
+                if newName:
+                    self.name = newName
+                    self.update()
 
             def setColorCallback():
-                self.color = askcolor(title=f'Zmień kolor klasy "{self.name}"')[1] # 2nd element of tuple is hex value
-                self.update()
+                newColor = askcolor(title=f'Zmień kolor klasy "{self.name}"')[1] # 2nd element of tuple is hex value
+                if newColor:
+                    self.color = newColor
+                    self.update()
 
             def setMarkerCallback():
-                self.marker = testCombobox()
-                self.update()
+                newMarker = testCombobox()
+                if newMarker:
+                    self.marker = newMarker
+                    self.update()
 
             nonlocal self
             m = tk.Menu(self.frame, tearoff=0)
