@@ -16,12 +16,19 @@ def fitAndPredict():
     classesTargets = dataStore.plotData['class'].values.tolist()
     modelStore.model.fit(coordsData, classesTargets)
 
-    dataForPrediction = createPredictionDataArray(-12, 12, width=800)
+    dataForPrediction = createPredictionDataArray(startX=dataStore.plotDimensions.xmin,
+                                                  endX=dataStore.plotDimensions.xmax,
+                                                  startY=dataStore.plotDimensions.ymin,
+                                                  endY=dataStore.plotDimensions.ymax,
+                                                  width=800)
     predictions = modelStore.model.predict(dataForPrediction)
     predictionsDFrame = pd.DataFrame(dataForPrediction, columns=['x', 'y'])
     predictionsDFrame['predicted class'] = predictions
 
-    plot = predictionsDFrame.plot.scatter(x=0, y=1, c=2, cmap='Pastel1', marker=',', s=1) #',' - pixel, s(size)=1
+    plot = predictionsDFrame.plot.scatter(
+        x=0, y=1, c=2, cmap='Pastel1', marker=',', s=1,  #',' - pixel, s(size)=1
+        xlim=(dataStore.plotDimensions.xmin, dataStore.plotDimensions.xmax),
+        ylim=(dataStore.plotDimensions.ymin, dataStore.plotDimensions.ymax))
     plot.scatter(
         x=dataStore.plotData['x'].values.tolist(),
         y=dataStore.plotData['y'].values.tolist(),
