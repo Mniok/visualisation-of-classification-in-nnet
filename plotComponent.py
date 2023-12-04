@@ -31,6 +31,11 @@ class PlotStore:
         dataStore.clearData()
         self.refreshPlot()
 
+    def updatePlotXYDimensions(self, refresh=True):
+        self.axes.set_xlim(dataStore.plotDimensions.xmin, dataStore.plotDimensions.xmax)
+        self.axes.set_ylim(dataStore.plotDimensions.ymin, dataStore.plotDimensions.ymax)
+        if refresh: self.refreshPlot()
+
 plotComponent = PlotStore()
 
 def createPlot(container):
@@ -43,6 +48,8 @@ def createPlot(container):
     plotComponent.figureCanvas = FigureCanvasTkAgg(fig, master=container)
     plotComponent.figureCanvas.draw()
     plotComponent.figureCanvas.get_tk_widget().pack()
+
+    plotComponent.updatePlotXYDimensions(refresh=False)
 
     def callbackOnCanvasClick(event):
         if event.xdata is None or event.ydata is None: return

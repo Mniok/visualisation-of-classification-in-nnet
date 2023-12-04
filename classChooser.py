@@ -4,6 +4,7 @@ from classFieldComponent import createClassField
 
 class ClassChoosersStore:
     def __init__(self):
+        self.currentAddedClassNumber = 0
         self.frame = None
         self.created = False
         self.classChoosers = []
@@ -11,9 +12,10 @@ class ClassChoosersStore:
     def addNewClass(self):
         if not self.created:
             raise Exception('Class chooser not created yet')
+        self.currentAddedClassNumber += 1
         newClassField = createClassField(
             self.frame,
-            f'Klasa {len(self.classChoosers) + 1}',
+            f'Klasa {self.currentAddedClassNumber}',
             'blue', # TODO: color sequence
             'o' # TODO: marker sequence
         )

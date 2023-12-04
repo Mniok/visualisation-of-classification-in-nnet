@@ -1,4 +1,5 @@
 import pandas as pd
+#from plotComponent import plotComponent
 
 class ClassData:
     def __init__(self):
@@ -6,11 +7,19 @@ class ClassData:
         self.colour = 'blue'
         self.shape = 'o'
 
+
+class PlotDimensions:
+    def __init__(self):
+        self.xmin = -10
+        self.xmax = 10
+        self.ymin = -10
+        self.ymax = 10
+
 class DataStore:
     def __init__(self):
         self.plotData = pd.DataFrame([], columns=['x', 'y', 'class'])
-        self.classesData = []
-        print('in DataStore __init__:', self, self.plotData, self.classesData)
+        self.classesData = [] #TODO: refactor to getter from classChooser
+        self.plotDimensions = PlotDimensions()
 
     def setPlotData(self, plotData):
         print('in setPlotData:', plotData, type(plotData))
