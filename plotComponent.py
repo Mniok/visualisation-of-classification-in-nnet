@@ -6,6 +6,7 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationTool
 import pandas as pd
 import matplotlib.pyplot as plt
 from DataStore import dataStore
+from classChooser import classChoosersStore
 
 class PlotStore:
     def __init__(self):

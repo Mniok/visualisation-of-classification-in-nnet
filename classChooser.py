@@ -10,6 +10,18 @@ class ClassChoosersStore:
         self.classChoosers = []
         self.selectedClassID = None
 
+    def getSelectedClassData(self):
+        if self.selectedClassID == None: raise Exception("No selected class present")
+        for i in range(0, len(self.classChoosers)):
+            cl = self.classChoosers[i]
+            if id(cl) == self.selectedClassID:
+                return {
+                    "c": i,
+                    "name": cl.name,
+                    "color": cl.color,
+                    "marker": cl.marker
+                }
+
     def addNewClass(self):
         if not self.created:
             raise Exception('Class chooser not created yet')
@@ -36,9 +48,11 @@ class ClassChoosersStore:
                 if i+1 < len(self.classChoosers): # ... there is a next class
                     self.classChoosers[i + 1].isSelected = True # to keep element in same place selected
                     self.classChoosers[i + 1].updateSelectedStyle()
+                    self.selectedClassID = id(self.classChoosers[i + 1])
                 elif len(self.classChoosers) > 1: # ... last, but there are previous classes
                     self.classChoosers[i - 1].isSelected = True # to keep element above (now new last) selected
                     self.classChoosers[i - 1].updateSelectedStyle()
+                    self.selectedClassID = id(self.classChoosers[i - 1])
 
         self.classChoosers = list(filter(lambda cl: id(cl) != targetID, self.classChoosers))
 
