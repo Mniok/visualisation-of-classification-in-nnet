@@ -8,6 +8,7 @@ class ClassChoosersStore:
         self.frame = None
         self.created = False
         self.classChoosers = []
+        self.selectedClassID = None
 
     def addNewClass(self):
         if not self.created:
@@ -18,13 +19,20 @@ class ClassChoosersStore:
             f'Klasa {self.currentAddedClassNumber}',
             'blue', # TODO: color sequence
             'o', # TODO: marker sequence
-            deleteHandler=self.deleteClass
+            deleteHandler=self.deleteClass,
+            selectHandler=self.selectClass
         )
         newClassField.frame.pack(side=tk.TOP, fill=tk.X, expand=True)
         self.classChoosers.append(newClassField)
 
     def deleteClass(self, targetID):
         self.classChoosers = list(filter(lambda cl: id(cl) != targetID, self.classChoosers))
+
+    def selectClass(self, targetID):
+        for classField in self.classChoosers:
+            classField.isSelected = id(classField) == targetID
+            classField.updateSelectedStyle()
+        self.selectedClassID = targetID
 
 classChoosersStore = ClassChoosersStore()
 
@@ -37,6 +45,8 @@ def createClassChooser(container):
     classChoosersStore.created = True
 
     classChoosersStore.addNewClass()  # add initial class so classes chooser is not empty on start
+    classChoosersStore.classChoosers[0].isSelected = True # init with first class already selected
+    classChoosersStore.classChoosers[0].updateSelectedStyle()
 
     addClassButton = ttk.Button(
         classChooserContainer,

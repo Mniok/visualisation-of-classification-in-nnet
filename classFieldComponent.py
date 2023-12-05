@@ -10,7 +10,7 @@ def askComboValue(*values):
     returnValue = ''
 
     def highlightCallback(event):
-        event.canvas.figure.patch.set_facecolor('red')
+        event.canvas.figure.patch.set_facecolor('yellow')
         event.canvas.draw()
 
     def unhighlightCallback(event):
@@ -38,31 +38,24 @@ def askComboValue(*values):
         # callbacks:
         fig.canvas.mpl_connect('figure_enter_event', highlightCallback)
         fig.canvas.mpl_connect('figure_leave_event', unhighlightCallback)
-        fig.canvas.mpl_connect('button_press_event', lambda *args: selectMarkerCallback(marker))
+        fig.canvas.mpl_connect('button_press_event', lambda event: selectMarkerCallback(marker))
 
-    # from https://stackoverflow.com/questions/62327504/how-to-create-a-simpledialog-like-window-with-a-combo-with-tkinter
-    tk.Label(top, text='Select your value').pack()
-    box_value = tk.StringVar()
-    #combo = ttk.Combobox(top, textvariable=box_value, values=values)
-    #combo.pack()
-    #combo.bind('<<ComboboxSelected>>', lambda _: top.destroy())
-    # ___
+    tk.Label(top, text='Wybierz nowy kształt znacznika:').pack()
+
     markers2DList = [['o', '.', ',', '+'],
                    ['o', '.', ',', '+'],
                    ['o', '.', ',', '+'],
                    ['o', '+', '+', '+', 'o'],
                    ['.', ',', '.'],
                    ['.', '+', 'o', ',']]
-    # ___
     for markersRow in markers2DList:
         row = tk.Frame(top)
         for marker in markersRow:
             drawMarker(row, marker)
         row.pack(side=tk.TOP, fill=tk.Y, expand=True)
-    # ___
+
     top.grab_set()
-    top.wait_window(top)  # wait for itself destroyed, so like a modal dialog
-    #return box_value.get()
+    top.wait_window(top)  # await window being destroyed (on marker shape selected)
     return returnValue
 
 def testCombobox():
@@ -71,21 +64,23 @@ def testCombobox():
     return result
 
 class ClassField:
-    def __init__(self, frame, name, color, marker, deleteHandler):
+    def __init__(self, frame, name, color, marker, deleteHandler, selectHandler):
         self.frame = frame
         self.name = name
         self.color = color
         self.marker = marker
         self.deleteHandler = deleteHandler
+        self.selectHandler = selectHandler
         self.nameLabel = None
         self.axes = None
         self.figureCanvas = None
+        self.isSelected = False
 
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(1, weight=1)
 
         # create label
-        self.nameLabel = ttk.Label(self.frame, text=name)
+        self.nameLabel = tk.Label(self.frame, text=name)
         self.nameLabel.grid(column=0, row=0, sticky=tk.NW)
 
         # create mini plot to showcase marker
@@ -141,6 +136,11 @@ class ClassField:
         self.nameLabel.bind("<Button-3>", openContextMenu)
         self.figureCanvas.get_tk_widget().bind('<Button-3>', openContextMenu)
 
+        # bind select callback to left click
+        self.frame.bind("<Button-1>", lambda event: self.selectHandler(id(self)))
+        self.nameLabel.bind("<Button-1>", lambda event: self.selectHandler(id(self)))
+        self.figureCanvas.get_tk_widget().bind('<Button-1>', lambda event: self.selectHandler(id(self)))
+
     def update(self):
         self.nameLabel.config(text=self.name)
 
@@ -151,6 +151,7 @@ class ClassField:
             color=self.color,
             marker=self.marker) # cannot neatly change marker shape without redrawing
         self.figureCanvas.draw()
+        self.updateSelectedStyle()
 
     def delete(self):
         self.deleteHandler(id(self))
@@ -158,11 +159,26 @@ class ClassField:
             widget.destroy()
         self.frame.destroy()
 
-def createClassField(container, name, color, marker, deleteHandler):
+    def updateSelectedStyle(self):
+        if self.isSelected:
+            self.frame.config(bg='#FFFFBB')
+            self.frame.config(highlightthickness=1)
+            self.frame.config(borderwidth=0) # basically padding
+            self.frame.config(highlightbackground='black')  # visual border
+            self.nameLabel.config(bg='#FFFFBB')
+        else:
+            self.frame.config(bg='#D9D9D9') # default background color on windows
+            self.frame.config(highlightthickness=0)
+            self.frame.config(borderwidth=1) # hiding highlight, using border instead - fixes bug with last class always having highlight
+            self.frame.config(highlightbackground='#D9D9D9')
+            self.nameLabel.config(bg='#D9D9D9')
+
+def createClassField(container, name, color, marker, deleteHandler, selectHandler):
     classField = ClassField(tk.Frame(container),
                             name,
                             color,
                             marker,
-                            deleteHandler)
+                            deleteHandler,
+                            selectHandler)
     #classField.frame.config(bg='#EEFFEE') # debug color
     return classField
