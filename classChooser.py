@@ -23,9 +23,23 @@ class ClassChoosersStore:
             selectHandler=self.selectClass
         )
         newClassField.frame.pack(side=tk.TOP, fill=tk.X, expand=True)
+        if len(self.classChoosers) == 0:
+            newClassField.isSelected = True # select if it's the only class
+            newClassField.updateSelectedStyle()
         self.classChoosers.append(newClassField)
 
     def deleteClass(self, targetID):
+        for i in range(0, len(self.classChoosers)):
+            cl = self.classChoosers[i]
+            if id(cl) == targetID and cl.isSelected: # deleting selected class
+                print(len(self.classChoosers), i, i < len(self.classChoosers))
+                if i+1 < len(self.classChoosers): # ... there is a next class
+                    self.classChoosers[i + 1].isSelected = True # to keep element in same place selected
+                    self.classChoosers[i + 1].updateSelectedStyle()
+                elif len(self.classChoosers) > 1: # ... last, but there are previous classes
+                    self.classChoosers[i - 1].isSelected = True # to keep element above (now new last) selected
+                    self.classChoosers[i - 1].updateSelectedStyle()
+
         self.classChoosers = list(filter(lambda cl: id(cl) != targetID, self.classChoosers))
 
     def selectClass(self, targetID):
@@ -45,8 +59,6 @@ def createClassChooser(container):
     classChoosersStore.created = True
 
     classChoosersStore.addNewClass()  # add initial class so classes chooser is not empty on start
-    classChoosersStore.classChoosers[0].isSelected = True # init with first class already selected
-    classChoosersStore.classChoosers[0].updateSelectedStyle()
 
     addClassButton = ttk.Button(
         classChooserContainer,
