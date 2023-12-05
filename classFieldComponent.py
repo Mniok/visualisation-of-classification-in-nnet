@@ -71,11 +71,12 @@ def testCombobox():
     return result
 
 class ClassField:
-    def __init__(self, frame, name, color, marker):
+    def __init__(self, frame, name, color, marker, deleteHandler):
         self.frame = frame
         self.name = name
         self.color = color
         self.marker = marker
+        self.deleteHandler = deleteHandler
         self.nameLabel = None
         self.axes = None
         self.figureCanvas = None
@@ -123,7 +124,7 @@ class ClassField:
             m.add_command(label="Zmień znacznik", command=setMarkerCallback)
             ## TODO? duplicate?
             m.add_separator()
-            m.add_command(label="Usuń klasę")
+            m.add_command(label="Usuń klasę", command=self.delete)
             return m
         contextMenu = createContextMenu()
 
@@ -151,11 +152,17 @@ class ClassField:
             marker=self.marker) # cannot neatly change marker shape without redrawing
         self.figureCanvas.draw()
 
+    def delete(self):
+        self.deleteHandler(id(self))
+        for widget in self.frame.winfo_children():
+            widget.destroy()
+        self.frame.destroy()
 
-def createClassField(container, name, color, marker):
+def createClassField(container, name, color, marker, deleteHandler):
     classField = ClassField(tk.Frame(container),
                             name,
                             color,
-                            marker)
+                            marker,
+                            deleteHandler)
     #classField.frame.config(bg='#EEFFEE') # debug color
     return classField

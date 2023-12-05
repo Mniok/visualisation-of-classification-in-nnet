@@ -17,11 +17,14 @@ class ClassChoosersStore:
             self.frame,
             f'Klasa {self.currentAddedClassNumber}',
             'blue', # TODO: color sequence
-            'o' # TODO: marker sequence
+            'o', # TODO: marker sequence
+            deleteHandler=self.deleteClass
         )
         newClassField.frame.pack(side=tk.TOP, fill=tk.X, expand=True)
         self.classChoosers.append(newClassField)
 
+    def deleteClass(self, targetID):
+        self.classChoosers = list(filter(lambda cl: id(cl) != targetID, self.classChoosers))
 
 classChoosersStore = ClassChoosersStore()
 
