@@ -54,7 +54,8 @@ def createPlot(container):
 
     def callbackOnCanvasClick(event):
         if event.xdata is None or event.ydata is None: return
-        dataStore.appendPlotDataPoint(event.xdata, event.ydata, 1); # TODO: currently selected class
+        selectedClass = classChoosersStore.getSelectedClassData()
+        dataStore.appendPlotDataPoint(event.xdata, event.ydata, selectedClass['c']); # TODO: currently selected class
         plotComponent.refreshPlot()
     plotComponent.figureCanvas.mpl_connect('button_press_event', callbackOnCanvasClick)
 
