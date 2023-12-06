@@ -4,6 +4,7 @@ import pandas as pd
 
 from DataStore import dataStore
 from plotComponent import plotComponent
+from classChooser import classChoosersStore
 
 FILETYPES = (
     ('Pliki CSV', '*.csv'),
@@ -28,6 +29,10 @@ def readFromFile():
     filename = selectFileForRead()
     if filename:
         dataStore.plotData = pd.read_csv(filename)
+        highestClassRead = max(dataStore.plotData['class'].values.tolist())
+        while len(classChoosersStore.classChoosers) <= highestClassRead:
+            classChoosersStore.addNewClass()
+        plotComponent.prepPatchCollectionsArray()
         plotComponent.refreshPlot()
 
 def saveToFile(dataToSave):
