@@ -2,6 +2,20 @@ import tkinter as tk
 from tkinter import ttk
 from classFieldComponent import createClassField
 
+from matplotlib import colors
+import math
+
+def getColorInSequence(n):
+    startingColor = colors.to_rgb('blue')
+    hsv = colors.rgb_to_hsv(startingColor)
+    nthColor = ((hsv[0]+((n-1)*0.13))%1, # empirically selected values that produce a reasonable sequence for the first couple colours
+                hsv[1]*(0.97**(n-1)),
+                hsv[2]*(0.95**(math.floor(max(0, n-14))/7)))
+    return colors.hsv_to_rgb(nthColor)
+def getMarkerInSequence(n):
+    usedDefaultMarkers = ['o', ',', '+', '.']
+    return usedDefaultMarkers[math.floor(n/8) % len(usedDefaultMarkers)]
+
 class ClassChoosersStore:
     def __init__(self):
         self.currentAddedClassNumber = 0
@@ -33,8 +47,8 @@ class ClassChoosersStore:
         newClassField = createClassField(
             self.frame,
             f'Klasa {self.currentAddedClassNumber}',
-            'blue', # TODO: color sequence
-            'o', # TODO: marker sequence
+            getColorInSequence(self.currentAddedClassNumber),
+            getMarkerInSequence(self.currentAddedClassNumber),
             deleteHandler=self.deleteClass,
             selectHandler=self.selectClass,
             redrawOnPlotHandler=self.redrawClassOnPlot
