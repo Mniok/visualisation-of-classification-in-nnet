@@ -20,7 +20,7 @@ from plotComponent import createPlot
 
 def createRightColumn(container):
     rightColumn = ttk.Frame(container)
-    createPlot(rightColumn)
-
+    topInputsBar = createTopBar(rightColumn)
+    mainPlot = createPlot(rightColumn)
     bottomInputsBar = createBottomBar(rightColumn)
     return rightColumn
