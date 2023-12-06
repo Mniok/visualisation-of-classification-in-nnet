@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from createPredictionDataArray import createPredictionDataArray
 from DataStore import dataStore
 from ModelStore import modelStore
+from classChooser import classChoosersStore
 
 from timeit import default_timer as timer
 
@@ -29,9 +30,12 @@ def fitAndPredict():
         x=0, y=1, c=2, cmap='Pastel1', marker=',', s=1,  #',' - pixel, s(size)=1
         xlim=(dataStore.plotDimensions.xmin, dataStore.plotDimensions.xmax),
         ylim=(dataStore.plotDimensions.ymin, dataStore.plotDimensions.ymax))
-    plot.scatter(
-        x=dataStore.plotData['x'].values.tolist(),
-        y=dataStore.plotData['y'].values.tolist(),
-        c=dataStore.plotData['class'].values.tolist(),
-        cmap='gist_rainbow')
+    for i in range(0, len(classChoosersStore.classChoosers)):
+        filteredPlotData = dataStore.plotData[dataStore.plotData['class'] == i]
+        if len(filteredPlotData):
+            plot.scatter(
+                x=filteredPlotData['x'].values.tolist(),
+                y=filteredPlotData['y'].values.tolist(),
+                color=classChoosersStore.getClassData(i)['color'],
+                marker=classChoosersStore.getClassData(i)['marker'])
     plt.show()
