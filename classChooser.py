@@ -9,18 +9,22 @@ class ClassChoosersStore:
         self.created = False
         self.classChoosers = []
         self.selectedClassID = None
+        self.redrawMarkerHandler = None # assigned in plotComponent
 
     def getSelectedClassData(self):
         if self.selectedClassID == None: raise Exception("No selected class present")
         for i in range(0, len(self.classChoosers)):
             cl = self.classChoosers[i]
             if id(cl) == self.selectedClassID:
-                return {
-                    "c": i,
-                    "name": cl.name,
-                    "color": cl.color,
-                    "marker": cl.marker
-                }
+                return self.getClassData(i)
+
+    def getClassData(self, c):
+        return {
+            "c": c,
+            "name": self.classChoosers[c].name,
+            "color": self.classChoosers[c].color,
+            "marker": self.classChoosers[c].marker
+        }
 
     def addNewClass(self):
         if not self.created:
@@ -32,7 +36,8 @@ class ClassChoosersStore:
             'blue', # TODO: color sequence
             'o', # TODO: marker sequence
             deleteHandler=self.deleteClass,
-            selectHandler=self.selectClass
+            selectHandler=self.selectClass,
+            redrawOnPlotHandler=self.redrawClassOnPlot
         )
         newClassField.frame.pack(side=tk.TOP, fill=tk.X, expand=True)
         if len(self.classChoosers) == 0:
@@ -44,7 +49,6 @@ class ClassChoosersStore:
         for i in range(0, len(self.classChoosers)):
             cl = self.classChoosers[i]
             if id(cl) == targetID and cl.isSelected: # deleting selected class
-                print(len(self.classChoosers), i, i < len(self.classChoosers))
                 if i+1 < len(self.classChoosers): # ... there is a next class
                     self.classChoosers[i + 1].isSelected = True # to keep element in same place selected
                     self.classChoosers[i + 1].updateSelectedStyle()
@@ -53,14 +57,25 @@ class ClassChoosersStore:
                     self.classChoosers[i - 1].isSelected = True # to keep element above (now new last) selected
                     self.classChoosers[i - 1].updateSelectedStyle()
                     self.selectedClassID = id(self.classChoosers[i - 1])
+                break
 
         self.classChoosers = list(filter(lambda cl: id(cl) != targetID, self.classChoosers))
+        for i in range(0, len(self.classChoosers)):
+            self.redrawMarkerHandler(i)
 
     def selectClass(self, targetID):
         for classField in self.classChoosers:
             classField.isSelected = id(classField) == targetID
             classField.updateSelectedStyle()
         self.selectedClassID = targetID
+
+    def redrawClassOnPlot(self, targetID):
+        for i in range(0, len(self.classChoosers)):
+            cl = self.classChoosers[i]
+            if id(cl) == targetID:
+                self.redrawMarkerHandler(i)
+                break
+
 
 classChoosersStore = ClassChoosersStore()
 

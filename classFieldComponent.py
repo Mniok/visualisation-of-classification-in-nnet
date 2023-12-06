@@ -7,13 +7,14 @@ from tkinter import simpledialog
 from markerShapePopup import askMarkerShape
 
 class ClassField:
-    def __init__(self, frame, name, color, marker, deleteHandler, selectHandler):
+    def __init__(self, frame, name, color, marker, deleteHandler, selectHandler, redrawOnPlotHandler):
         self.frame = frame
         self.name = name
         self.color = color
         self.marker = marker
         self.deleteHandler = deleteHandler
         self.selectHandler = selectHandler
+        self.redrawOnPlotHandler = redrawOnPlotHandler
         self.nameLabel = None
         self.axes = None
         self.figureCanvas = None
@@ -48,12 +49,14 @@ class ClassField:
                 if newColor:
                     self.color = newColor
                     self.update()
+                    self.redrawOnPlotHandler(id(self))
 
             def setMarkerCallback():
                 newMarker = askMarkerShape()
                 if newMarker:
                     self.marker = newMarker
                     self.update()
+                    self.redrawOnPlotHandler(id(self))
 
             nonlocal self
             m = tk.Menu(self.frame, tearoff=0)
@@ -116,12 +119,13 @@ class ClassField:
             self.frame.config(highlightbackground='#D9D9D9')
             self.nameLabel.config(bg='#D9D9D9')
 
-def createClassField(container, name, color, marker, deleteHandler, selectHandler):
+def createClassField(container, name, color, marker, deleteHandler, selectHandler, redrawOnPlotHandler):
     classField = ClassField(tk.Frame(container),
                             name,
                             color,
                             marker,
                             deleteHandler,
-                            selectHandler)
+                            selectHandler,
+                            redrawOnPlotHandler)
     #classField.frame.config(bg='#EEFFEE') # debug color
     return classField

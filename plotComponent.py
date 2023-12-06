@@ -19,7 +19,7 @@ class PlotStore:
         # prepare enough patchCollections for every class in classChoosers
         while len(self.patchCollections) < len(classChoosersStore.classChoosers):
             classData = classChoosersStore.classChoosers[len(self.patchCollections)]
-            newPatchCollection = plotComponent.axes.scatter(
+            newPatchCollection = self.axes.scatter(
                 x=[],
                 y=[],
                 color=classData.color,
@@ -50,6 +50,16 @@ class PlotStore:
         self.axes.set_ylim(dataStore.plotDimensions.ymin, dataStore.plotDimensions.ymax)
         if refresh: self.refreshPlot()
 
+    def redrawMarkerForClass(self, c):
+        classData = classChoosersStore.getClassData(c)
+        self.patchCollections[c].remove()
+        self.patchCollections[c] = self.axes.scatter(
+                x=[],
+                y=[],
+                color=classData['color'],
+                marker=classData['marker'])
+        self.refreshPlot()
+
 plotComponent = PlotStore()
 
 def createPlot(container):
@@ -68,6 +78,8 @@ def createPlot(container):
         dataStore.appendPlotDataPoint(event.xdata, event.ydata, selectedClassData['c'])
         plotComponent.refreshPlot()
     plotComponent.figureCanvas.mpl_connect('button_press_event', callbackOnCanvasClick)
+
+    classChoosersStore.redrawMarkerHandler = plotComponent.redrawMarkerForClass # passed like this to avoid circular reference
 
     plotComponent.created = True
     return plotComponent.figureCanvas
