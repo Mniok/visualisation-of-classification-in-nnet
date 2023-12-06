@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+import math
+from functools import partial
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -14,7 +16,9 @@ def createTopBar(container):
     def updateSolverCallback(value):
         modelStore.solver = value
     def updateActivationFunctionCallback(value):
-        modelStore.activationFunction = value
+        modelStore.activation = value
+    def updateHiddenLayer(n, value):
+        modelStore.hidden_layer_sizes[n] = int(math.floor(value))
 
     # solver
     solvers = ['lbfgs', 'sgd', 'adam']
@@ -37,6 +41,26 @@ def createTopBar(container):
     #hiddenLayerSizesLabel.pack(fill='x', expand=True)
     #layer1Size = ttk.Entry(container, textvariable=password, validate='all')
     #layer1Size.pack(fill='x', expand=True)
+    layer1Size = createNumberInput(
+        container,
+        "Warstwy ukryte:",
+        modelStore.hidden_layer_sizes[0],
+        partial(updateHiddenLayer, 0))
+    layer2Size = createNumberInput(
+        container,
+        "",
+        modelStore.hidden_layer_sizes[1],
+        partial(updateHiddenLayer, 1))
+    layer3Size = createNumberInput(
+        container,
+        "",
+        modelStore.hidden_layer_sizes[2],
+        partial(updateHiddenLayer, 2))
+    layer4Size = createNumberInput(
+        container,
+        "",
+        modelStore.hidden_layer_sizes[3],
+        partial(updateHiddenLayer, 3))
 
 def createBottomBar(container):
     createPlotDimensionsInputs(container)
@@ -79,7 +103,16 @@ def createPlotDimensionsInputs(container):
 def createNumberInput(container, labelText, startingValue, valueChangedCallback):
     entryValue = tk.StringVar(value=startingValue)
     def callback(var, index, mode):
-        valueChangedCallback(float(entryValue.get()))
+        try:
+            valueChangedCallback(float(entryValue.get()))
+        except ValueError:
+            if (
+                entryValue.get() is None
+                or not entryValue.get()
+                or entryValue.get().isspace()
+            ):
+                entryValue.set('0')
+
     entryValue.trace_add('write', callback)
 
     frame = tk.Frame(container)
