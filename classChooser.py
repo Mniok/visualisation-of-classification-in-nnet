@@ -60,21 +60,24 @@ class ClassChoosersStore:
         self.classChoosers.append(newClassField)
 
     def deleteClass(self, targetID):
+        targetIndex = None
         for i in range(0, len(self.classChoosers)):
             cl = self.classChoosers[i]
-            if id(cl) == targetID and cl.isSelected: # deleting selected class
-                if i+1 < len(self.classChoosers): # ... there is a next class
-                    self.classChoosers[i + 1].isSelected = True # to keep element in same place selected
-                    self.classChoosers[i + 1].updateSelectedStyle()
-                    self.selectedClassID = id(self.classChoosers[i + 1])
-                elif len(self.classChoosers) > 1: # ... last, but there are previous classes
-                    self.classChoosers[i - 1].isSelected = True # to keep element above (now new last) selected
-                    self.classChoosers[i - 1].updateSelectedStyle()
-                    self.selectedClassID = id(self.classChoosers[i - 1])
+            if id(cl) == targetID:
+                targetIndex = i
+                if cl.isSelected:  # deleting selected class
+                    if i+1 < len(self.classChoosers): # ... there is a next class
+                        self.classChoosers[i + 1].isSelected = True # to keep element in same place selected
+                        self.classChoosers[i + 1].updateSelectedStyle()
+                        self.selectedClassID = id(self.classChoosers[i + 1])
+                    elif len(self.classChoosers) > 1: # ... last, but there are previous classes
+                        self.classChoosers[i - 1].isSelected = True # to keep element above (now new last) selected
+                        self.classChoosers[i - 1].updateSelectedStyle()
+                        self.selectedClassID = id(self.classChoosers[i - 1])
                 break
 
         self.classChoosers = list(filter(lambda cl: id(cl) != targetID, self.classChoosers))
-        for i in range(0, len(self.classChoosers)):
+        for i in range(targetIndex, len(self.classChoosers)):
             self.redrawMarkerHandler(i)
 
     def selectClass(self, targetID):

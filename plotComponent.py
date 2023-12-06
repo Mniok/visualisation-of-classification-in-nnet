@@ -52,14 +52,14 @@ class PlotStore:
 
     def redrawMarkerForClass(self, c):
         classData = classChoosersStore.getClassData(c)
-        print('in redraw marker (DEBUG', len(self.patchCollections), c) # !! debug, remove
-        self.patchCollections[c].remove() # TODO: fix "IndexError: list index out of range"
-        self.patchCollections[c] = self.axes.scatter(
-                x=[],
-                y=[],
-                color=classData['color'],
-                marker=classData['marker'])
-        self.refreshPlot()
+        if len(dataStore.plotData[dataStore.plotData['class'] == c]) > 0:
+            self.patchCollections[c].remove() # TODO: fix "IndexError: list index out of range"
+            self.patchCollections[c] = self.axes.scatter(
+                    x=[],
+                    y=[],
+                    color=classData['color'],
+                    marker=classData['marker'])
+            self.refreshPlot()
 
 plotComponent = PlotStore()
 
