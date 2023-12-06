@@ -13,6 +13,8 @@ from plotComponent import plotComponent
 def createTopBar(container):
     def updateSolverCallback(value):
         modelStore.solver = value
+    def updateActivationFunctionCallback(value):
+        modelStore.activationFunction = value
 
     # solver
     solvers = ['lbfgs', 'sgd', 'adam']
@@ -21,6 +23,14 @@ def createTopBar(container):
                                     optionsList=solvers,
                                     startingValue='adam',
                                     valueChangedCallback=updateSolverCallback)
+
+    # activation function
+    activationFunctions = ['identity', 'logistic', 'tanh', 'relu']
+    activationDropdown = createDropdown(container,
+                                    labelText="Funkcja aktywacji:",
+                                    optionsList=activationFunctions,
+                                    startingValue='relu',
+                                    valueChangedCallback=updateActivationFunctionCallback)
 
     # hidden layer sizes:
     #hiddenLayerSizesLabel = ttk.Label(container, text="Rozmiary warstw ukrytych:")

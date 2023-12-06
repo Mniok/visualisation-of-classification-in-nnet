@@ -6,6 +6,7 @@ class ModelStore:
         self.model = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(8, 4), random_state=1, max_iter=2000)
         
         self.solver='adam'
+        self.activationFunction='relu'
         self.hidden_layer_sizes=(8, 4)
         self.random_state=1
         self.max_iter=2000
@@ -18,10 +19,11 @@ class ModelStore:
         print('modelStore.updateModel')
         self.model = MLPClassifier(
             solver=self.solver,
+            activation=self.activationFunction,
             hidden_layer_sizes=self.hidden_layer_sizes,
             random_state=self.random_state,
             max_iter=self.max_iter)
-        #TODO: switch by solver
+        #TODO: switch by solver, add solver-specific things like "alpha"
 
 
 modelStore = ModelStore()
