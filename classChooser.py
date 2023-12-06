@@ -73,6 +73,7 @@ def createClassChooser(container):
     classChoosersStore.created = True
 
     classChoosersStore.addNewClass()  # add initial class so classes chooser is not empty on start
+    classChoosersStore.selectClass(id(classChoosersStore.classChoosers[0])) # highlighting first class is also handled in classFieldComponent, this is just to set selectedClassID
 
     addClassButton = ttk.Button(
         classChooserContainer,

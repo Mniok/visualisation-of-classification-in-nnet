@@ -11,20 +11,33 @@ from classChooser import classChoosersStore
 class PlotStore:
     def __init__(self):
         self.axes = None
-        self.patchCollection = None
+        self.patchCollections = []
         self.figureCanvas = None
         self.created = False
+
+    def prepPatchCollectionsArray(self):
+        # prepare enough patchCollections for every class in classChoosers
+        while len(self.patchCollections) < len(classChoosersStore.classChoosers):
+            classData = classChoosersStore.classChoosers[len(self.patchCollections)]
+            newPatchCollection = plotComponent.axes.scatter(
+                x=[],
+                y=[],
+                color=classData.color,
+                marker=classData.marker)
+            self.patchCollections.append(newPatchCollection)
 
     def refreshPlot(self):
         if not self.created:
             raise Exception('Plot has not been created yet!')
-        if len(dataStore.plotData) > 0:
-            self.patchCollection.set(
-                offsets=dataStore.plotData[['x', 'y']].values.tolist(),
-                array=dataStore.plotData['class'].values.tolist(),
-                visible=True)
-        else:
-            self.patchCollection.set_visible(False) # trying to set empty data throws errors, hiding patchCollection instead
+        self.prepPatchCollectionsArray()
+        for i in range(0, len(self.patchCollections)):
+            filteredPlotData = dataStore.plotData[dataStore.plotData['class'] == i]
+            if len(filteredPlotData) > 0:
+                self.patchCollections[i].set(
+                    offsets=filteredPlotData[['x', 'y']].values.tolist(),
+                    visible=True)
+            else:
+                self.patchCollections[i].set_visible(False) # trying to set empty data throws errors, hiding patchCollection instead
         self.axes.redraw_in_frame()
         self.figureCanvas.draw()
 
@@ -42,10 +55,7 @@ plotComponent = PlotStore()
 def createPlot(container):
     fig = Figure(figsize=(5, 5), dpi=100)
     plotComponent.axes = fig.add_subplot(1, 1, 1) # 1x1 grid, place plot in index 1
-    plotComponent.patchCollection = plotComponent.axes.scatter(
-        x = dataStore.plotData['x'].values.tolist(),
-        y = dataStore.plotData['y'].values.tolist(),
-        c = dataStore.plotData['class'].values.tolist())
+    plotComponent.prepPatchCollectionsArray()
     plotComponent.figureCanvas = FigureCanvasTkAgg(fig, master=container)
     plotComponent.figureCanvas.draw()
     plotComponent.figureCanvas.get_tk_widget().pack()
@@ -54,8 +64,8 @@ def createPlot(container):
 
     def callbackOnCanvasClick(event):
         if event.xdata is None or event.ydata is None: return
-        selectedClass = classChoosersStore.getSelectedClassData()
-        dataStore.appendPlotDataPoint(event.xdata, event.ydata, selectedClass['c']); # TODO: currently selected class
+        selectedClassData = classChoosersStore.getSelectedClassData()
+        dataStore.appendPlotDataPoint(event.xdata, event.ydata, selectedClassData['c'])
         plotComponent.refreshPlot()
     plotComponent.figureCanvas.mpl_connect('button_press_event', callbackOnCanvasClick)
 
