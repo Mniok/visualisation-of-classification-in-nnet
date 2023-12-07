@@ -13,6 +13,7 @@ from ModelStore import modelStore
 from plotComponent import plotComponent
 
 def createTopBar(container):
+    topBarFrame = tk.Frame(container)
     def updateSolverCallback(value):
         modelStore.solver = value
     def updateActivationFunctionCallback(value):
@@ -22,7 +23,7 @@ def createTopBar(container):
 
     # solver
     solvers = ['lbfgs', 'sgd', 'adam']
-    solverDropdown = createDropdown(container,
+    solverDropdown = createDropdown(topBarFrame,
                                     labelText="Optymizer:",
                                     optionsList=solvers,
                                     startingValue='adam',
@@ -30,40 +31,42 @@ def createTopBar(container):
 
     # activation function
     activationFunctions = ['identity', 'logistic', 'tanh', 'relu']
-    activationDropdown = createDropdown(container,
+    activationDropdown = createDropdown(topBarFrame,
                                     labelText="Funkcja aktywacji:",
                                     optionsList=activationFunctions,
                                     startingValue='relu',
                                     valueChangedCallback=updateActivationFunctionCallback)
 
     # hidden layer sizes:
-    #hiddenLayerSizesLabel = ttk.Label(container, text="Rozmiary warstw ukrytych:")
-    #hiddenLayerSizesLabel.pack(fill='x', expand=True)
-    #layer1Size = ttk.Entry(container, textvariable=password, validate='all')
-    #layer1Size.pack(fill='x', expand=True)
     layer1Size = createNumberInput(
-        container,
+        topBarFrame,
         "Warstwy ukryte:",
         modelStore.hidden_layer_sizes[0],
         partial(updateHiddenLayer, 0))
     layer2Size = createNumberInput(
-        container,
+        topBarFrame,
         "",
         modelStore.hidden_layer_sizes[1],
         partial(updateHiddenLayer, 1))
     layer3Size = createNumberInput(
-        container,
+        topBarFrame,
         "",
         modelStore.hidden_layer_sizes[2],
         partial(updateHiddenLayer, 2))
     layer4Size = createNumberInput(
-        container,
+        topBarFrame,
         "",
         modelStore.hidden_layer_sizes[3],
         partial(updateHiddenLayer, 3))
 
+    return topBarFrame
+
 def createBottomBar(container):
-    createPlotDimensionsInputs(container)
+    bottomBarFrame = tk.Frame(container)
+
+    createPlotDimensionsInputs(bottomBarFrame)
+
+    return bottomBarFrame
 
 def createPlotDimensionsInputs(container):
     def updateXMinCallback(value):

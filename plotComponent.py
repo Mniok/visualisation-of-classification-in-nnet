@@ -69,7 +69,6 @@ def createPlot(container):
     plotComponent.prepPatchCollectionsArray()
     plotComponent.figureCanvas = FigureCanvasTkAgg(fig, master=container)
     plotComponent.figureCanvas.draw()
-    plotComponent.figureCanvas.get_tk_widget().pack()
 
     plotComponent.updatePlotXYDimensions(refresh=False)
 
@@ -83,4 +82,4 @@ def createPlot(container):
     classChoosersStore.redrawMarkerHandler = plotComponent.redrawMarkerForClass # passed like this to avoid circular reference
 
     plotComponent.created = True
-    return plotComponent.figureCanvas
+    return plotComponent.figureCanvas.get_tk_widget()

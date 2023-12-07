@@ -26,7 +26,7 @@ leftColumn.pack(side=tk.LEFT, anchor=tk.W, fill=tk.Y, expand=True)
 
 # right column (parameter inputs and plot)
 rightColumn = createRightColumn(rootWindow)
-rightColumn.pack(side=tk.RIGHT, anchor=tk.E, fill=tk.Y, expand=True)
+rightColumn.pack(side=tk.LEFT, anchor=tk.W, fill=tk.BOTH, expand=True)
 
 # execute Tkinter
 rootWindow.mainloop()

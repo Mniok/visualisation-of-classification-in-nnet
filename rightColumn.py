@@ -10,17 +10,13 @@ from DataStore import dataStore
 
 from plotComponent import createPlot
 
-#def createTopBar(container):
-    # hidden layer sizes:
-
-
-#def createBottomBar(container):
-    # zakres:
-    # xlimLow, xlimHigh, ylimLow, ylimHigh
-
 def createRightColumn(container):
-    rightColumn = ttk.Frame(container)
+    rightColumn = tk.Frame(container)
+
     topInputsBar = createTopBar(rightColumn)
+    topInputsBar.pack(side=tk.TOP, anchor=tk.N, fill=tk.X, expand=False)
     mainPlot = createPlot(rightColumn)
+    mainPlot.pack(anchor=tk.CENTER, expand=True)
     bottomInputsBar = createBottomBar(rightColumn)
+    bottomInputsBar.pack(side=tk.BOTTOM, anchor=tk.S, fill=tk.X, expand=False)
     return rightColumn
