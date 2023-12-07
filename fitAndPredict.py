@@ -26,7 +26,10 @@ def fitAndPredict():
     modelStore.updateModel()
     coordsData = dataStore.plotData[['x', 'y']].values.tolist()
     classesTargets = dataStore.plotData['class'].values.tolist()
+
+    learningTimeStart = timer()
     modelStore.model.fit(coordsData, classesTargets)
+    learningTimeEnd = timer()
 
     dataForPrediction = createPredictionDataArray(startX=dataStore.plotDimensions.xmin,
                                                   endX=dataStore.plotDimensions.xmax,
@@ -55,8 +58,9 @@ def fitAndPredict():
                 marker=classChoosersStore.getClassData(i)['marker'])
 
     #compute accuracy score:
-    testData = dataStore.plotData # TODO: consider separating test data and training data, but probably not possible here since all given data has to be plotted, ergo, has to be training data
+    testData = dataStore.plotData
     predictionsForSameValuesAsData = modelStore.model.predict(testData[['x', 'y']].values.tolist())
     accuracyScore = accuracy_score(testData['class'].values.tolist(), predictionsForSameValuesAsData)
-    plt.gcf().text(0.02, 0.02, f"Trafność: {accuracyScore}", fontsize=11)
+    plt.gcf().text(0.02, 0.02, f"Trafność: {str(accuracyScore)[0:8]}", fontsize=11)
+    plt.gcf().text(0.58, 0.02, f"Czas uczenia: {str(learningTimeEnd - learningTimeStart)[0:8]} sek.", fontsize=11)
     plt.show()
