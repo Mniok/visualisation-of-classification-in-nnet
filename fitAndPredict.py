@@ -58,5 +58,5 @@ def fitAndPredict():
     testData = dataStore.plotData # TODO: consider separating test data and training data, but probably not possible here since all given data has to be plotted, ergo, has to be training data
     predictionsForSameValuesAsData = modelStore.model.predict(testData[['x', 'y']].values.tolist())
     accuracyScore = accuracy_score(testData['class'].values.tolist(), predictionsForSameValuesAsData)
-    print('accuracy:', accuracyScore)
+    plt.gcf().text(0.02, 0.02, f"Trafność: {accuracyScore}", fontsize=11)
     plt.show()
