@@ -5,6 +5,7 @@ from createPredictionDataArray import createPredictionDataArray
 from DataStore import dataStore
 from ModelStore import modelStore
 from classChooser import classChoosersStore
+from sklearn.metrics import accuracy_score
 
 from timeit import default_timer as timer
 
@@ -52,4 +53,10 @@ def fitAndPredict():
                 y=filteredPlotData['y'].values.tolist(),
                 color=classChoosersStore.getClassData(i)['color'],
                 marker=classChoosersStore.getClassData(i)['marker'])
+
+    #compute accuracy score:
+    testData = dataStore.plotData # TODO: consider separating test data and training data, but probably not possible here since all given data has to be plotted, ergo, has to be training data
+    predictionsForSameValuesAsData = modelStore.model.predict(testData[['x', 'y']].values.tolist())
+    accuracyScore = accuracy_score(testData['class'].values.tolist(), predictionsForSameValuesAsData)
+    print('accuracy:', accuracyScore)
     plt.show()
