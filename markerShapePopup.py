@@ -39,12 +39,11 @@ def askMarkerShape():
 
     tk.Label(top, text='Wybierz nowy kształt znacznika:').pack()
 
-    markers2DList = [['o', '.', ',', '+'],
-                   ['o', '.', ',', '+'],
-                   ['o', '.', ',', '+'],
-                   ['o', '+', '+', '+', 'o'],
-                   ['.', ',', '.'],
-                   ['.', '+', 'o', ',']]
+    markers2DList = [['o', '.', 's', '8'],
+                    ['v', '^', '<', '>'],
+                    ['p', '*', 'h', 'H'],
+                    ['+', 'P', 'x', 'X'],
+                    ['D', 'd', 8, 9]]
     for markersRow in markers2DList:
         row = tk.Frame(top)
         for marker in markersRow:
