@@ -103,6 +103,8 @@ def createPlotDimensionsInputs(container):
         dataStore.plotDimensions.ymax,
         updateYMaxCallback)
 
+    # one more TODO: - add a warning if there are datapoints outside of graphing range (not visible, but will still be used in fitting and in accuracy score evaluation), add a button to autoresize (dopasuj), maybe trim fitting data and accuracy score evaluation data to range visible on screen? (none of this was touched on during presentation, but apparrently there's time until Styczeń, and I think this is a somewhat important feature for a final product)
+
 def createNumberInput(container, labelText, startingValue, valueChangedCallback):
     entryValue = tk.StringVar(value=startingValue)
     def callback(var, index, mode):
