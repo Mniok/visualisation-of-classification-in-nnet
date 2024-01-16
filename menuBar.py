@@ -14,7 +14,7 @@ def createMenuBar(container):
     menu.add_cascade(label="Plik", menu=fileMenuCascade)
 
     programMenuCascade = tk.Menu(menu, tearoff=0)
-    programMenuCascade.add_command(label="Rozwiąż", command=fitAndPredict)
+    programMenuCascade.add_command(label="Klasyfikuj", command=fitAndPredict)
     programMenuCascade.add_command(label="Zamknij", command=container.destroy)
     programMenuCascade.add_command(label="Wyczyść dane", command=plotComponent.clearPlot)
     menu.add_cascade(label="Program", menu=programMenuCascade)
