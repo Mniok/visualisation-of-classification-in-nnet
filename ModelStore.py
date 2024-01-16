@@ -1,5 +1,4 @@
 from sklearn.neural_network import MLPClassifier
-import pandas as pd
 
 class ModelStore:
     def __init__(self):
@@ -11,19 +10,15 @@ class ModelStore:
         self.random_state=1
         self.max_iter=2000
 
-        print('in ModelStore __init__ before update:', self.model, self.random_state, self.max_iter)
         self.updateModel()
-        print('in ModelStore __init__:', self.model, self.random_state)
 
     def updateModel(self):
-        print('modelStore.updateModel')
         self.model = MLPClassifier(
             solver=self.solver,
             activation=self.activation,
             hidden_layer_sizes=tuple([val for val in self.hidden_layer_sizes if val]), # eg. [8, 4, 0, 0] => (8, 4)
             random_state=self.random_state,
             max_iter=self.max_iter)
-        #TODO: switch by solver, add solver-specific things like "alpha"
 
 
 modelStore = ModelStore()

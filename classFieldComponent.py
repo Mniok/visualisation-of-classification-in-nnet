@@ -63,7 +63,6 @@ class ClassField:
             m.add_command(label="Zmień nazwę", command=setNameCallback)
             m.add_command(label="Zmień kolor", command=setColorCallback)
             m.add_command(label="Zmień znacznik", command=setMarkerCallback)
-            ## TODO? duplicate?
             m.add_separator()
             m.add_command(label="Usuń klasę", command=self.delete)
             return m
@@ -127,5 +126,4 @@ def createClassField(container, name, color, marker, deleteHandler, selectHandle
                             deleteHandler,
                             selectHandler,
                             redrawOnPlotHandler)
-    #classField.frame.config(bg='#EEFFEE') # debug color
     return classField

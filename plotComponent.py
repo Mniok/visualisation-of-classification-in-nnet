@@ -1,10 +1,6 @@
-import tkinter as tk
-from tkinter import ttk
-from matplotlib.figure import Figure 
+from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
-import pandas as pd
-import matplotlib.pyplot as plt
 from DataStore import dataStore
 from classChooser import classChoosersStore
 
@@ -53,7 +49,7 @@ class PlotStore:
     def redrawMarkerForClass(self, c):
         classData = classChoosersStore.getClassData(c)
         if len(dataStore.plotData[dataStore.plotData['class'] == c]) > 0:
-            self.patchCollections[c].remove() # TODO: fix "IndexError: list index out of range" (sometimes happens when deleting too many classes)
+            self.patchCollections[c].remove()
             self.patchCollections[c] = self.axes.scatter(
                     x=[],
                     y=[],

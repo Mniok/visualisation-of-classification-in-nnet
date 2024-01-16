@@ -1,5 +1,4 @@
 import pandas as pd
-#from plotComponent import plotComponent
 
 class ClassData:
     def __init__(self):
@@ -18,15 +17,10 @@ class PlotDimensions:
 class DataStore:
     def __init__(self):
         self.plotData = pd.DataFrame([], columns=['x', 'y', 'class'])
-        self.classesData = [] #TODO: refactor to getter from classChooser
+        self.classesData = []
         self.plotDimensions = PlotDimensions()
 
     def setPlotData(self, plotData):
-        print('in setPlotData:', plotData, type(plotData))
-        print(plotData.columns)
-        #if plotData is not pd.DataFrame:
-            #raise Exception('set plotData must be a pandas DataFrame!')
-        #TODO: also raise if wrong columns
         self.plotData = plotData
 
     def from2DArray(self, data2DArray):
@@ -37,7 +31,6 @@ class DataStore:
         self.plotData = pd.concat([self.plotData, dataFrameToAppend], ignore_index=True)
 
     def appendPlotDataPoint(self, x, y, classValue):
-        print('plot dataPoint:', 'x:', x, 'y:', y, 'class:', classValue)
         self.appendPlotData([[x, y, classValue]])
 
     def clearData(self):

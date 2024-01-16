@@ -1,4 +1,3 @@
-from sklearn.neural_network import MLPClassifier
 import pandas as pd
 import matplotlib.pyplot as plt
 from createPredictionDataArray import createPredictionDataArray

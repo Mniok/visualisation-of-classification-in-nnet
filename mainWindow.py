@@ -8,17 +8,12 @@ from menuBar import createMenuBar
 rootWindow = tk.Tk()
 rootWindow.title("Projekt Inżynierski - wizualizacja procesu klasyfikacji w sieci neuronowej typu MLP")
 rootWindow.geometry('1200x640')
-#rootWindow.configure(bg='#FFEEEE') # debug color
 
 
 # top menu bar
 menu = createMenuBar(rootWindow)
 rootWindow.config(menu=menu)
 
-
-# positioning in window
-#rootWindow.columnconfigure(0, weight=1) # thin column, left
-#rootWindow.columnconfigure(1, weight=4) # thick column
 
 # left column (classes container)
 leftColumn = createLeftColumn(rootWindow)
